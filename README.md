@@ -1,2 +1,2 @@
-# dontwait007-gmail.com
+# Uiiverse for Nintendo Switch
 A graphical interface using SDL2 for Uiiverse (nx)
