@@ -97,8 +97,8 @@ int main(int argc, char* argv[])
 	SDL_Rect select;
 	Helper_CopyRectStruct(&select, COMMENT_CONTINUE.txt_rect);
 	
-	Helper_StructText ERROR;
-	Helper_CreateTextureFromText(renderer, &ERROR, "Warning: it will crash the homebrew", "romfs:/aquawax.ttf", 28, 650, 50, red);
+	//Helper_StructText ERROR;
+	//Helper_CreateTextureFromText(renderer, &ERROR, "Warning: it will crash the homebrew", "romfs:/aquawax.ttf", 28, 650, 50, red);
 	
 	Mix_PlayMusic(music, -1);
 	
@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
 		SDL_RenderCopy(renderer, COMMENT_CONTINUE.txt_texture, NULL, &COMMENT_CONTINUE.txt_rect);
 		SDL_RenderCopy(renderer, COMMENT_INFO.txt_texture, NULL, &COMMENT_INFO.txt_rect);
 		SDL_RenderCopy(renderer, COMMENT_QUIT.txt_texture, NULL, &COMMENT_QUIT.txt_rect);
-		SDL_RenderCopy(renderer, ERROR.txt_texture, NULL, &ERROR.txt_rect);
+		//SDL_RenderCopy(renderer, ERROR.txt_texture, NULL, &ERROR.txt_rect);
 		
 		SDL_RenderDrawRect(renderer, &select);
 		
@@ -151,7 +151,7 @@ int main(int argc, char* argv[])
 	Helper_DestroyStructText(&COMMENT_CONTINUE);
 	Helper_DestroyStructText(&COMMENT_INFO);
 	Helper_DestroyStructText(&COMMENT_QUIT);
-	Helper_DestroyStructText(&ERROR);
+	//Helper_DestroyStructText(&ERROR);
 	
 	Mix_CloseAudio();
 	Mix_FreeMusic(music);
