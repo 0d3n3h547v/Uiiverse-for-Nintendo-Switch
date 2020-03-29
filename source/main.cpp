@@ -37,6 +37,7 @@ SDL_Renderer * renderer;
 SDL_Texture * background;
 
 SDL_Color white = {255, 255, 255, 255};
+SDL_Color red = {255, 0, 0, 255};
 
 // Main program entrypoint
 int main(int argc, char* argv[])
@@ -45,11 +46,12 @@ int main(int argc, char* argv[])
 	romfsInit();
     SDL_Init(SDL_INIT_EVERYTHING);
 	IMG_Init(IMG_INIT_PNG);
+	Mix_Init(MIX_INIT_MP3);
 	
 	window = SDL_CreateWindow("n/a", 0, 0, 1280, 720, 0);
 	renderer = SDL_CreateRenderer(window, 0, SDL_RENDERER_ACCELERATED);
 	
-	bool isApp = true;
+	bool isApp = false;
 	
     if (!(appletGetAppletType() == AppletType_Application)) {
 		if (appletWarning(window, renderer) == true) {
@@ -61,7 +63,6 @@ int main(int argc, char* argv[])
 			SDL_Quit();
 			romfsExit();
 			
-			isApp = false;
 			return (0);
 		}
 	}
@@ -71,6 +72,11 @@ int main(int argc, char* argv[])
 	background = IMG_LoadTexture(renderer, "romfs:/background.png");
 	
 	SDL_Texture * icon = IMG_LoadTexture(renderer, "romfs:/uiiverse.png");
+	
+	Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 1024);
+	
+	Mix_Music * music;
+	music = Mix_LoadMUS("romfs:/music.mp3");
 	
 	SDL_Rect icon_rect;
 	
@@ -90,7 +96,13 @@ int main(int argc, char* argv[])
 	
 	SDL_Rect select;
 	Helper_CopyRectStruct(&select, COMMENT_CONTINUE.txt_rect);
-
+	
+	Helper_StructText ERROR;
+	Helper_CreateTextureFromText(renderer, &ERROR, "Warning: it will crash the homebrew", "romfs:/aquawax.ttf", 28, 650, 50, red);
+	
+	Mix_PlayMusic(music, -1);
+	
+	
     while (appletMainLoop())
     {
         hidScanInput();
@@ -109,7 +121,7 @@ int main(int argc, char* argv[])
         if (kDown & KEY_A) {
 			
 			if (select.y == (COMMENT_CONTINUE.txt_rect.y)) {
-				if (isApp) openUiiverse(window, renderer);
+				isApp = true;
 				break;
 			}
 			
@@ -128,6 +140,7 @@ int main(int argc, char* argv[])
 		SDL_RenderCopy(renderer, COMMENT_CONTINUE.txt_texture, NULL, &COMMENT_CONTINUE.txt_rect);
 		SDL_RenderCopy(renderer, COMMENT_INFO.txt_texture, NULL, &COMMENT_INFO.txt_rect);
 		SDL_RenderCopy(renderer, COMMENT_QUIT.txt_texture, NULL, &COMMENT_QUIT.txt_rect);
+		SDL_RenderCopy(renderer, ERROR.txt_texture, NULL, &ERROR.txt_rect);
 		
 		SDL_RenderDrawRect(renderer, &select);
 		
@@ -136,17 +149,25 @@ int main(int argc, char* argv[])
 	
 	Helper_DestroyStructText(&TITLE);
 	Helper_DestroyStructText(&COMMENT_CONTINUE);
+	Helper_DestroyStructText(&COMMENT_INFO);
 	Helper_DestroyStructText(&COMMENT_QUIT);
+	Helper_DestroyStructText(&ERROR);
+	
+	Mix_CloseAudio();
+	Mix_FreeMusic(music);
 	
 	SDL_DestroyTexture(icon);
 	SDL_DestroyTexture(background);
 	SDL_DestroyRenderer(renderer);
 	SDL_DestroyWindow(window);
 	
+	Mix_Quit();
 	TTF_Quit();
 	IMG_Quit();
 	SDL_Quit();
 	romfsExit();
+	
+	if (isApp == true) openUiiverse();
 	
     return (EXIT_SUCCESS);
 }

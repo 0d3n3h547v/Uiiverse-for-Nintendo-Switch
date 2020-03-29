@@ -108,11 +108,7 @@ void infoUiiverse(SDL_Renderer * r, SDL_Texture * background) {
 	return;
 }
 
-void openUiiverse(SDL_Window * w, SDL_Renderer * r) {
-	
-	SDL_RenderClear(r);
-	SDL_DestroyRenderer(r);
-	SDL_DestroyWindow(w);
+void openUiiverse(void) {
 	
     Result rc;
     WebCommonConfig config;

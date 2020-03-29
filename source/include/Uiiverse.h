@@ -31,6 +31,6 @@
 
 bool appletWarning(SDL_Window * window, SDL_Renderer * renderer) ;
 void infoUiiverse(SDL_Renderer * r, SDL_Texture * background);
-void openUiiverse(SDL_Window * w, SDL_Renderer * r);
+void openUiiverse(void);
 
 #endif
