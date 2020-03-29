@@ -11,11 +11,12 @@ typedef struct {
 	SDL_Texture * txt_texture;
 	SDL_Rect 	txt_rect;
 	
-} SDL_StructText;
+} Helper_StructText;
 
-void Helper_CreateTextureFromText(SDL_Renderer *r, SDL_StructText *st, const char*text, const char*p, int size, int y, int x, SDL_Color color);
-void Helper_DestroyStructText(SDL_StructText * st);
+void Helper_CreateTextureFromText(SDL_Renderer *r, Helper_StructText *st, const char*text, const char*p, int size, int y, int x, SDL_Color color);
+void Helper_DestroyStructText(Helper_StructText * st);
 
+void Helper_CopyRectStruct(SDL_Rect * spt1, SDL_Rect spt2); // spt1 destination << spt2 source
 void Helper_StructRect(SDL_Rect * rect, int y, int x, int w, int h);
 
 #endif

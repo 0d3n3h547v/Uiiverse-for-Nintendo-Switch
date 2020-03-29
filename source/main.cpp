@@ -38,8 +38,6 @@ SDL_Texture * background;
 
 SDL_Color white = {255, 255, 255, 255};
 
-void openUiiverse();
-
 // Main program entrypoint
 int main(int argc, char* argv[])
 {
@@ -78,29 +76,49 @@ int main(int argc, char* argv[])
 	
 	Helper_StructRect(&icon_rect, 100, 100, 115, 100);
 	
-	SDL_StructText TITLE;
+	Helper_StructText TITLE;
 	Helper_CreateTextureFromText(renderer, &TITLE, "Uiiverse", "romfs:/aquawax.ttf", 100, 100, 220, white);
 	
-	SDL_StructText COMMENT_CONTINUE;
-	Helper_CreateTextureFromText(renderer, &COMMENT_CONTINUE, "Press (A) to continue", "romfs:/aquawax.ttf", 36, 500, 100, white);
+	Helper_StructText COMMENT_CONTINUE;
+	Helper_CreateTextureFromText(renderer, &COMMENT_CONTINUE, "Continue", "romfs:/aquawax.ttf", 36, 500, 100, white);
 	
-	SDL_StructText COMMENT_QUIT;
-	Helper_CreateTextureFromText(renderer, &COMMENT_QUIT, "Press (+) to quit", "romfs:/aquawax.ttf", 36, 540, 100, white);
+	Helper_StructText COMMENT_INFO;
+	Helper_CreateTextureFromText(renderer, &COMMENT_INFO, "Information", "romfs:/aquawax.ttf", 36, 540, 100, white);
 	
-    //printf(CONSOLE_RESET "Copyright (c) Uiiverse, 2019\n\nReleased under the AGPLv3.\nNot licensable under later versions and clause 7b and 7c are in effect.");
+	Helper_StructText COMMENT_QUIT;
+	Helper_CreateTextureFromText(renderer, &COMMENT_QUIT, "Quit", "romfs:/aquawax.ttf", 36, 580, 100, white);
+	
+	SDL_Rect select;
+	Helper_CopyRectStruct(&select, COMMENT_CONTINUE.txt_rect);
 
     while (appletMainLoop())
     {
         hidScanInput();
         u64 kDown = hidKeysDown(CONTROLLER_P1_AUTO);
 
-        if (kDown & KEY_PLUS) break;
-
+        if (kDown & KEY_DUP) {
+			if (select.y == (COMMENT_QUIT.txt_rect.y)) Helper_CopyRectStruct(&select, COMMENT_INFO.txt_rect);
+			else if (select.y == (COMMENT_INFO.txt_rect.y)) Helper_CopyRectStruct(&select, COMMENT_CONTINUE.txt_rect);
+		}
+		
+		if (kDown & KEY_DDOWN) {
+			if (select.y == (COMMENT_CONTINUE.txt_rect.y)) Helper_CopyRectStruct(&select, COMMENT_INFO.txt_rect);
+			else if (select.y == (COMMENT_INFO.txt_rect.y)) Helper_CopyRectStruct(&select, COMMENT_QUIT.txt_rect);
+		}
+		
         if (kDown & KEY_A) {
-            if (isApp) { 					
-				openUiiverse(window, renderer); 
+			
+			if (select.y == (COMMENT_CONTINUE.txt_rect.y)) {
+				if (isApp) openUiiverse(window, renderer);
 				break;
 			}
+			
+			if (select.y == (COMMENT_INFO.txt_rect.y)) {
+				Helper_CopyRectStruct(&select, COMMENT_CONTINUE.txt_rect);
+				infoUiiverse(renderer, background);
+			}
+			
+			if (select.y == (COMMENT_QUIT.txt_rect.y)) break;
 		}
 		
 		SDL_RenderClear(renderer);
@@ -108,7 +126,11 @@ int main(int argc, char* argv[])
 		SDL_RenderCopy(renderer, icon, NULL, &icon_rect);
 		SDL_RenderCopy(renderer, TITLE.txt_texture, NULL, &TITLE.txt_rect);
 		SDL_RenderCopy(renderer, COMMENT_CONTINUE.txt_texture, NULL, &COMMENT_CONTINUE.txt_rect);
+		SDL_RenderCopy(renderer, COMMENT_INFO.txt_texture, NULL, &COMMENT_INFO.txt_rect);
 		SDL_RenderCopy(renderer, COMMENT_QUIT.txt_texture, NULL, &COMMENT_QUIT.txt_rect);
+		
+		SDL_RenderDrawRect(renderer, &select);
+		
 		SDL_RenderPresent(renderer);
     }
 	

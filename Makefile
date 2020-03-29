@@ -39,8 +39,8 @@ include $(DEVKITPRO)/libnx/switch_rules
 #---------------------------------------------------------------------------------
 TARGET		:=	uiiverse
 APP_TITLE	:=	Uiiverse
-APP_AUTHOR	:=	Uiiverse (Modded by Waifro)
-APP_VERSION	:=	2.2
+APP_AUTHOR	:=	Uiiverse (GUI by Waifro)
+APP_VERSION	:=	3.0-alpha
 BUILD		:=	build
 SOURCES		:=	source
 DATA		:=	data

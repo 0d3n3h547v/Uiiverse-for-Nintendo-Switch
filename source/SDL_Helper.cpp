@@ -1,8 +1,8 @@
 #include "include/SDL_Helper.h"
 
-void Helper_CreateTextureFromText(SDL_Renderer *r, SDL_StructText *st, const char*text, const char*p, int size, int y, int x, SDL_Color color) {
+void Helper_CreateTextureFromText(SDL_Renderer *r, Helper_StructText *st, const char*text, const char*p, int size, int y, int x, SDL_Color color) {
 	
-	SDL_StructText pd;
+	Helper_StructText pd;
 	pd.txt_font = TTF_OpenFont(p, size);
 
 	SDL_Surface * s = TTF_RenderText_Solid(pd.txt_font, text, color);
@@ -19,9 +19,23 @@ void Helper_CreateTextureFromText(SDL_Renderer *r, SDL_StructText *st, const cha
 	return;
 }
 
-void Helper_DestroyStructText(SDL_StructText * st) {
+void Helper_DestroyStructText(Helper_StructText * st) {
 	SDL_DestroyTexture(st->txt_texture);
 	TTF_CloseFont(st->txt_font);
+	return;
+}
+
+void Helper_CopyRectStruct(SDL_Rect * spt1, SDL_Rect spt2) {
+	
+	SDL_Rect rect;
+	
+	rect.y = spt2.y;
+	rect.x = spt2.x;
+	rect.w = spt2.w;
+	rect.h = spt2.h;
+	
+	memcpy(spt1, &rect, sizeof(rect));
+	
 	return;
 }
 
